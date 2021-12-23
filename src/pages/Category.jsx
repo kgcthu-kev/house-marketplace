@@ -1,11 +1,9 @@
 import {
   collection,
-  doc,
   getDocs,
   limit,
   orderBy,
   query,
-  startAfter,
   where,
 } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
@@ -53,7 +51,7 @@ function Category() {
 
   useEffect(() => {
     fetchListings()
-  }, [])
+  })
   return (
     <div className='category'>
       <header>

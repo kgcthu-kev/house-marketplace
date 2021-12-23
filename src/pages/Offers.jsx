@@ -1,15 +1,12 @@
 import {
   collection,
-  doc,
   getDocs,
   limit,
   orderBy,
   query,
-  startAfter,
   where,
 } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import ListingItem from '../components/ListingItem'
 import Spinner from '../components/Spinner'
@@ -18,7 +15,6 @@ import { db } from '../firebase.config'
 function Offers() {
   const [listings, setLisings] = useState(null)
   const [loading, setLoading] = useState(true)
-  const params = useParams()
 
   const fetchListings = async () => {
     try {
@@ -74,7 +70,7 @@ function Offers() {
           </main>
         </>
       ) : (
-        <p>There are no current offer.</p>
+        <p>There are no offer.</p>
       )}
     </div>
   )
