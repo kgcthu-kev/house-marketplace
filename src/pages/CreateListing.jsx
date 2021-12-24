@@ -11,6 +11,7 @@ import {
 } from 'firebase/storage'
 import { db } from '../firebase.config'
 import { v4 as uuidv4 } from 'uuid'
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 
 function CreateListing() {
   const [geolocationEnabled, setGeolocationEnabled] = useState(false)
@@ -22,7 +23,7 @@ function CreateListing() {
     bathrooms: 1,
     parking: false,
     furnished: false,
-    address: '',
+    location: '',
     offer: false,
     regularPrice: 0,
     discountedPrice: 0,
@@ -38,7 +39,7 @@ function CreateListing() {
     bathrooms,
     parking,
     furnished,
-    address,
+    location,
     offer,
     regularPrice,
     discountedPrice,
@@ -135,8 +136,23 @@ function CreateListing() {
       return
     })
     console.log(imageUrls)
+    const formDataCopy = {
+      ...formData,
+      imageUrls,
+      geoLocation,
+      timestamp: serverTimestamp(),
+    }
+    delete formDataCopy.images
+    location && (formDataCopy.location = location)
+    !formDataCopy.offer && delete formDataCopy.discountedPrice
+    console.log(formDataCopy)
+    console.log(typeof formDataCopy.bathrooms)
+    // save data firebase
+    const docRef = await addDoc(collection(db, 'listings'), formDataCopy)
 
     setLoading(false)
+    toast.success('Listing is saved')
+    navigate(`/category/${formDataCopy.type}/${docRef.id}`)
   }
 
   const onMutate = (e) => {
@@ -293,12 +309,12 @@ function CreateListing() {
             </button>
           </div>
 
-          <label className='formLabel'>Address</label>
+          <label className='formLabel'>Location</label>
           <textarea
             className='formInputAddress'
             type='text'
-            id='address'
-            value={address}
+            id='location'
+            value={location}
             onChange={onMutate}
             required
           />
