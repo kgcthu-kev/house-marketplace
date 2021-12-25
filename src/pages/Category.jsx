@@ -18,40 +18,40 @@ function Category() {
   const [loading, setLoading] = useState(true)
   const params = useParams()
 
-  const fetchListings = async () => {
-    try {
-      // Get ref
-      const listingsRef = collection(db, 'listings')
-
-      // create query
-      const q = query(
-        listingsRef,
-        where('type', '==', params.categoryName),
-        orderBy('timestamp', 'desc'),
-        limit(10)
-      )
-
-      // execute query
-      const querySnap = await getDocs(q)
-      const listings = []
-
-      querySnap.forEach((doc) => {
-        return listings.push({
-          id: doc.id,
-          data: doc.data(),
-        })
-      })
-
-      setLisings(listings)
-      setLoading(false)
-    } catch (error) {
-      toast.error('Could not fetch the data')
-    }
-  }
-
   useEffect(() => {
+    const fetchListings = async () => {
+      try {
+        // Get ref
+        const listingsRef = collection(db, 'listings')
+
+        // create query
+        const q = query(
+          listingsRef,
+          where('type', '==', params.categoryName),
+          orderBy('timestamp', 'desc'),
+          limit(10)
+        )
+
+        // execute query
+        const querySnap = await getDocs(q)
+        const listings = []
+
+        querySnap.forEach((doc) => {
+          return listings.push({
+            id: doc.id,
+            data: doc.data(),
+          })
+        })
+
+        setLisings(listings)
+        setLoading(false)
+      } catch (error) {
+        toast.error('Could not fetch the data')
+      }
+    }
     fetchListings()
-  })
+  }, [params.categoryName])
+
   return (
     <div className='category'>
       <header>
@@ -71,6 +71,7 @@ function Category() {
               <ListingItem
                 key={listing.id}
                 listing={listing.data}
+                id={listing.id}
               ></ListingItem>
             ))}
           </main>

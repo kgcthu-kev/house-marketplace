@@ -143,7 +143,7 @@ function CreateListing() {
       timestamp: serverTimestamp(),
     }
     delete formDataCopy.images
-    location && (formDataCopy.location = location)
+    formDataCopy.location = location
     !formDataCopy.offer && delete formDataCopy.discountedPrice
     console.log(formDataCopy)
     console.log(typeof formDataCopy.bathrooms)
